@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Application.Core;
 using Application.Interfaces;
 using Domain;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Products
@@ -14,7 +15,14 @@ namespace Application.Products
         {
             public Product Product{get;set;}
         }
-
+        
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Product).SetValidator(new ProductValidator());
+            }
+        }
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly IUnitOfWork _unitOfWork;
@@ -26,11 +34,6 @@ namespace Application.Products
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                if(String.IsNullOrWhiteSpace(request.Product.Name))
-                    return Result<Unit>.Failure("Name cannot be empty or contains only whitespaces");    
-                if(request.Product.Price<0)
-                    return Result<Unit>.Failure("Price cannot be lower than 0");
-
                 request.Product.CreationDate=DateTime.Now;
                 
                 _unitOfWork.Products.Add(request.Product);

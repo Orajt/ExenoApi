@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
 using Persistence;
 using Application.Interfaces;
 using Application.Repositories;
@@ -28,7 +29,11 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+            .AddFluentValidation(config => 
+            {
+                config.RegisterValidatorsFromAssemblyContaining<Application.Products.EditProduct>();
+            });
             services.AddMediatR(typeof(ProductList.Handler).Assembly);
             services.AddSwaggerGen(c =>
             {

@@ -50,27 +50,6 @@ namespace Application.Tests.Products
             _unitOfWork.Verify(uow=>uow.SaveChangesAsync(),Times.Never);
         }
         [Test]
-        [TestCase("", TestName ="EditProduct_NameIsEmpty_ReturnResultFailure")]
-        [TestCase("  ", TestName ="EditProduct_NameContainsOnlyWhitespaces_ReturnResultFailure")]
-        [TestCase(null, TestName ="EditProduct_NameIsNull_ReturnResultFailure")]
-        public async Task EditProduct_TestName_ReturnResultFailure(string name)
-        {
-            _command!.Product.Name=name;
-            var handler = new EditProduct.Handler(_unitOfWork!.Object, _mapper);
-            var result = await handler.Handle(_command, CancellationToken.None);
-            Assert.That(result.Error.Length, Is.GreaterThan(0));
-            _unitOfWork.Verify(uow=>uow.SaveChangesAsync(),Times.Never);
-        }
-        [Test]
-        public async Task EditProduct_TestPrice_ReturnResultFailure()
-        {
-            _command!.Product.Price=-1;
-            var handler = new EditProduct.Handler(_unitOfWork!.Object, _mapper);
-            var result = await handler.Handle(_command, CancellationToken.None);
-            Assert.That(result.Error.Length, Is.GreaterThan(0));
-            _unitOfWork.Verify(uow=>uow.SaveChangesAsync(),Times.Never);
-        }
-        [Test]
         public async Task EditProduct_TestPropertyChaanges_CreationDateStaysSameOtherPropsNewer()
         {
             var handler = new EditProduct.Handler(_unitOfWork!.Object, _mapper);
@@ -80,7 +59,6 @@ namespace Application.Tests.Products
             Assert.That(result.IsSuccess, Is.True);
         }
         
-
         [Test]
         public async Task EditProduct_SaveChaangesFail_ReturnResultFailure()
         {

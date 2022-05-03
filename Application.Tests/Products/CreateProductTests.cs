@@ -31,27 +31,6 @@ namespace Application.Tests.Products
 
         }
         [Test]
-        [TestCase("", TestName ="CreateProduct_NameIsEmpty_ReturnResultFailure")]
-        [TestCase("  ", TestName ="CreateProduct_NameContainsOnlyWhitespaces_ReturnResultFailure")]
-        [TestCase(null, TestName ="CreateProduct_NameIsNull_ReturnResultFailure")]
-        public async Task CreateProduct_TestName_ReturnResultFailure(string name)
-        {
-            _command!.Product.Name=name;
-            var handler = new CreateProduct.Handler(_unitOfWork?.Object);
-            var result = await handler.Handle(_command, CancellationToken.None);
-            Assert.That(result.Error.Length, Is.GreaterThan(0));
-            _unitOfWork?.Verify(uow=>uow.Products.Add(_product),Times.Never);
-        }
-        [Test]
-        public async Task CreateProduct_TestPrice_ReturnResultFailure()
-        {
-            _command!.Product.Price=-1;
-            var handler = new CreateProduct.Handler(_unitOfWork?.Object);
-            var result = await handler.Handle(_command, CancellationToken.None);
-            Assert.That(result.Error.Length, Is.GreaterThan(0));
-            _unitOfWork!.Verify(uow=>uow.Products.Add(_product),Times.Never);
-        }
-        [Test]
         public async Task CreateProduct_SaveChaangesFail_ReturnResultFailure()
         {
             _unitOfWork!.Setup(uow=>uow.SaveChangesAsync()).ReturnsAsync(false);

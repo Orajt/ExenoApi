@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using Application.Core;
 using MediatR;
-using Domain;
-using Persistence;
 using System.Threading.Tasks;
 using System.Threading;
-using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 
 namespace Application.Products
